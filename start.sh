@@ -7,7 +7,7 @@ echo "Input file name (Ex: input.csv): "
 read inputFile
 echo "Output file name (Ex: output.csv): "
 read outputFile
-echo "Key value to be found: "
+echo "Amount target to be found: "
 read keyValue
 echo "Number of elements for combination: "
 read nElements
