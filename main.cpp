@@ -4,10 +4,11 @@
 #include <stdio.h>
 #include <sstream>
 #include <map>
+#include <set>
 #include <vector>
 #include <math.h>
 #define lli long long int
-#define MAP_TYPE map <lli, vector< vector<Transaction>*>  > * 
+#define MAP_TYPE map <lli, vector< vector<Transaction> >  >
 using namespace std;
 
 class Transaction{
@@ -22,14 +23,58 @@ class Transaction{
         this->value = value;
         this->irf = irf;
     }
-    bool operator < (const Transaction &b){
-        return this->value < b.value;
-    }
-
-    bool operator == (const Transaction &b){
+    const bool operator < (const Transaction &b) const {
         return this->id < b.id;
     }
 
+    bool operator != (const Transaction &b) const {
+        return this->id != b.id;
+    }    
+};
+
+class Solution {
+    public:
+    vector<Transaction> S;
+
+    Solution(vector<Transaction> S){
+        sort(S.begin(), S.end());
+        this->S = S;
+    }
+
+    int size(){
+        return this->S.size();
+    }
+
+    bool operator == (const Solution &b){
+        if(this->S.size() != b.S.size()) return false;
+        for(int i=0; i < b.S.size(); i++){
+            if(S[i] != b.S[i]) return false;
+        }
+        return true;
+    }
+
+    bool operator < (const Solution &b) const {
+        string a_id = "";
+        string b_id = "";
+
+        for(int i=0; i < this->S.size(); i++){
+            a_id += this->S[i].id;
+        }
+
+        for(int i=0; i < b.S.size(); i++){
+            b_id += this->S[i].id;
+        }
+        return a_id < b_id;
+    }
+
+    void printS() const{
+        cout << "(";
+        for(int i=0; i < this->S.size(); i++){
+            if(i!=0) cout << ",";
+            cout << this->S[i].id;
+        }
+        cout << ")" << endl;
+    }
 };
 
 const int decimal_fix = 100;
@@ -130,20 +175,18 @@ void generateCombinations( lli SUM_TOTAL_AMOUNT, int totalElements)
             if(dif < 0) continue;
             //  Element found
             if(dif == 0){
-                vector <Transaction> *new_solution = new vector <Transaction>;
-                new_solution->push_back(transactions[j]);
-                vector <vector <Transaction> *> *new_vector = new vector <vector <Transaction> * >;
-                new_vector->push_back(new_solution);
-                mapa[i] = new_vector;
+                vector <Transaction> new_solution;
+                new_solution.push_back(transactions[j]);
+                mapa[i].push_back(new_solution);
             }
         
             // Finding another solution
             if(not mapa[dif].empty()){
                 for(int k=0; k < mapa[dif].size(); k++){
                     // vector <Transaction> *current = mapa[dif][k];
-                    if(mapa[dif][k]->size() < totalElements){
-                        vector <Transaction> *new_solution = new vector<Transaction>(mapa[dif][k]->begin(), mapa[dif][k]->end());
-                        new_solution->push_back(transactions[j]);
+                    if(mapa[dif][k].size() < totalElements){
+                        vector <Transaction> new_solution = vector<Transaction>(mapa[dif][k].begin(), mapa[dif][k].end());
+                        new_solution.push_back(transactions[j]);
                         mapa[i].push_back(new_solution);
                     }
                 }
@@ -152,57 +195,52 @@ void generateCombinations( lli SUM_TOTAL_AMOUNT, int totalElements)
     }
 }
 
-void printSolutionsAux(lli amountTarget){
-    // map <lli, vector< vector<Transaction>*>
-    if(mapa.find(amountTarget) != mapa.end()){
-        for(int i=0; mapa[amountTarget].size();i++){
-            cout << "Solution " << i+1 << endl;
-            cout << "Size: " << mapa[amountTarget].size() << endl;
-            cout << "(";
-            for(int j=0; mapa[amountTarget][i]->size();j++){
-                vector<Transaction> current = mapa[amountTarget][i][j];
-                cout << "Current Size: " << current.size() << endl;
-                for(int k=0; k < current.size(); k++){
-                    if(k!=0) cout << ",";
-                    cout  << current[k].id;
-                } 
+vector< vector <Transaction> > getSolutions(lli amountTarget, int nElements){
+    vector <vector <Transaction> > output;
+    set <Solution> Ss;
 
+    if(mapa.find(amountTarget) != mapa.end()){
+        for(int i=0; i < mapa[amountTarget].size();i++){
+            vector<Transaction> current = mapa[amountTarget][i];
+            if(current.size() == nElements){
+                Ss.insert(Solution(current));
             }
-            cout << ")" << endl;
         }
     }
+
+    set <Solution> :: iterator it = Ss.begin();
+
+    for(;it != Ss.end(); it++){
+        output.push_back(it->S);
+    }
+
+    return output;
 }
 
 int main(int argc, char *argv[]){
-    // inputFile = string(argv[1]);
-    // outputFile = string(argv[2]);
-    // string amountTargetS = string(argv[3]);
-    // string nElementsS = string(argv[4]);
-    // string irfTargetS = string(argv[4]);
-    // double amountTarget = 0.0;
-    // double irfTarget = 0.0;
-    // int nElements = 0;
+    inputFile = string(argv[1]);
+    outputFile = string(argv[2]);
+    string amountTargetS = string(argv[3]);
+    string nElementsS = string(argv[4]);
+    string irfTargetS = string(argv[4]);
+    double amountTarget = 0.0;
+    double irfTarget = 0.0;
+    int nElements = 0;
     
-    // if(argc != 5){
-    //     cout << "Error: Provide input, output, key value and quantity of elements." << endl;
-    //     cout << argc << " arguments." << endl;
-    //     return -1;
-    // }
+    if(argc != 5){
+        cout << "Error: Provide input, output, key value and quantity of elements." << endl;
+        cout << argc << " arguments." << endl;
+        return -1;
+    }
 
-    // try {    
-    //     amountTarget = stod(amountTargetS);
-    //     irfTarget = stod(irfTargetS);
-    //     nElements = stoi(nElementsS);
-    // } catch(...) {
-    //     cout << "The sequence of elements is wrong." << endl;
-    //     cout << "A float and integer are expected." << endl;  
-    // }
-
-    double amountTarget = 96.8;
-    double irfTarget = 0.8;
-    int nElements = 3;
-    inputFile = "input2.csv";
-    outputFile = "output3.csv";
+    try {    
+        amountTarget = stod(amountTargetS);
+        irfTarget = stod(irfTargetS);
+        nElements = stoi(nElementsS);
+    } catch(...) {
+        cout << "The sequence of elements is wrong." << endl;
+        cout << "A float and integer are expected." << endl;  
+    }
 
     getInput();
 
@@ -210,7 +248,7 @@ int main(int argc, char *argv[]){
     lli amountTargetT = trunc(amountTarget*decimal_fix);
  
     generateCombinations(amountTargetT, nElements);
-    printSolutionsAux(amountTargetT);
+    printSolutions(getSolutions(amountTargetT, nElements));
 
     return 0;
 }
