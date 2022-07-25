@@ -166,7 +166,7 @@ void printStack(vector <Transaction> S){
     cout << " IRF_ALL: " << float(irf_total)/decimal_fix << endl;
 }
 
-void generateCombinations( lli SUM_TOTAL_AMOUNT, int totalElements)
+void algorithm2( lli SUM_TOTAL_AMOUNT, int totalElements)
 {
     for(int i=1; i <= SUM_TOTAL_AMOUNT; i++){
         for(int j=0; j < transactions.size(); j++){
@@ -183,7 +183,6 @@ void generateCombinations( lli SUM_TOTAL_AMOUNT, int totalElements)
             // Finding another solution
             if(not mapa[dif].empty()){
                 for(int k=0; k < mapa[dif].size(); k++){
-                    // vector <Transaction> *current = mapa[dif][k];
                     if(mapa[dif][k].size() < totalElements){
                         vector <Transaction> new_solution = vector<Transaction>(mapa[dif][k].begin(), mapa[dif][k].end());
                         new_solution.push_back(transactions[j]);
