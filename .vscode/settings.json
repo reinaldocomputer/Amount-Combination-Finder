@@ -4,6 +4,20 @@
         "iosfwd": "cpp",
         "iterator": "cpp",
         "string": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "ostream": "cpp",
+        "__split_buffer": "cpp",
+        "deque": "cpp",
+        "__hash_table": "cpp",
+        "__tree": "cpp",
+        "array": "cpp",
+        "bitset": "cpp",
+        "initializer_list": "cpp",
+        "map": "cpp",
+        "stack": "cpp",
+        "string_view": "cpp",
+        "unordered_map": "cpp",
+        "utility": "cpp",
+        "iostream": "cpp"
     }
 }
