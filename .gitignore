@@ -1,2 +1,5 @@
 .vscode/
 bin
+main
+main.dSYM/
+output*

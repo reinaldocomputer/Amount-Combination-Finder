@@ -96,7 +96,7 @@ class Solution {
 // Variables and constants
 
 const int decimal_fix = 100;
-lli irfTargetT = 0;
+lli irfTargetT = 0, amountTargetT = 0;
 vector <Transaction> transactions;
 string inputFile = "", outputFile = "";
 vector <Solution> solutions;
@@ -124,8 +124,9 @@ void getInput(){
         irf = irf * decimal_fix;
         lli lli_value = trunc(value);
         lli lli_irf = trunc(irf);
-
-        transactions.push_back(Transaction(id, lli_value, lli_irf));
+        if(lli_value <= amountTargetT){
+            transactions.push_back(Transaction(id, lli_value, lli_irf));
+        }
     }
     fin.close();
 }
@@ -187,7 +188,7 @@ lli getMin(){
 }
 
 void algorithm2( lli SUM_TOTAL_AMOUNT, int totalElements)
-{
+{ 
     int i = int(getMin());
     for(;i <= SUM_TOTAL_AMOUNT; i++){
         for(int j=0; j < transactions.size(); j++){
@@ -306,18 +307,11 @@ int main(int argc, char *argv[]){
         cout << "A float and integer are expected." << endl;  
     }
 
-    // inputFile = "input2.csv";
-    // outputFile = "output3.csv";
-    // string algorithm = "algorithm1";
-    // double amountTarget = 96.8;
-    // double irfTarget = 0.9;
-    // int nElements = 3;
-    
-    getInput();
-
     vector <Transaction> empty;
-    lli amountTargetT = trunc(amountTarget*decimal_fix);
+    amountTargetT = trunc(amountTarget*decimal_fix);
     irfTargetT = trunc(irfTarget*decimal_fix);
+
+    getInput();
  
     if(algorithm == "algorithm1"){
         vector <Transaction> empty;
