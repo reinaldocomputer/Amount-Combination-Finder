@@ -46,7 +46,7 @@ class Solution {
         this->sum_total = 0;
         for(int i=0; i < S.size(); i++){
             sum_irf += S[i].irf;
-            sum_total += S[i].irf;
+            sum_total += S[i].value;
         }
         sort(this->S.begin(), this->S.end());
     }
